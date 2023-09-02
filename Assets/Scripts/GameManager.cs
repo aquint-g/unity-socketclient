@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Newtonsoft.Json;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,15 +27,15 @@ public class GameManager : MonoBehaviour
     public void InitiateLogin(){
         var login = loginInput.GetComponent<TMP_Text>().text;
         var password = passwordInput.GetComponent<TMP_Text>().text;
-        var creds = new Credentials(){
+        var creds = new Credentials{
             Username = login,
             Password = password
         };
-        var message = new Message(){
-            Code = "credentials",
-            Args = creds // Pour faire l'inverse c'est FromJson() Obvious wsh
-        };
+        Message<Credentials> message = new Message<Credentials>();
+            message.Code = "credentials";
+            message.Args = creds; // Pour faire l'inverse c'est FromJson() Obvious wsh
 
-        connection.GetComponent<Connection>().SendWebSocketMessage(JsonUtility.ToJson(message));
+
+        connection.GetComponent<Connection>().SendWebSocketMessage(JsonConvert.SerializeObject(message));
     }
 }

@@ -5,11 +5,13 @@ using UnityEngine;
 
 
 using NativeWebSocket;
+using Newtonsoft.Json;
 
-public struct Message
+[System.Serializable]
+public struct Message <T>
 {
     public string Code;
-    public object Args;
+    public T Args;
     public string CredentialsId;
 }
 public struct Credentials
@@ -47,12 +49,9 @@ public class Connection : MonoBehaviour
 
     websocket.OnMessage += (bytes) =>
     {
-      Debug.Log("OnMessage!");
-      Debug.Log(bytes);
-
       // getting the message as a string
-      // var message = System.Text.Encoding.UTF8.GetString(bytes);
-      // Debug.Log("OnMessage! " + message);
+      var message = System.Text.Encoding.UTF8.GetString(bytes);
+       Debug.Log("OnMessage! " + message);
     };
 
     // Keep sending messages at every 0.3s
@@ -73,7 +72,7 @@ public class Connection : MonoBehaviour
   {
     if (websocket.State == WebSocketState.Open)
     {
-      // Sending bytes
+      // Sending text
       await websocket.SendText(message);
     }
   }
